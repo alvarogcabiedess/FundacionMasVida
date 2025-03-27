@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fundación Más Vida</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1% 1%;
+            background: linear-gradient(90deg, #80f0ff, #16c5ff);
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        #logo img {
+            width: 12%;
+        }
+        /*MENU*/
+        nav {
+            position: relative;
+            z-index: 100;
+        }
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 20px;
+        }
+        nav ul li {
+            display: inline;
+            margin: 0 auto;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            position: relative;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        nav ul li a:hover {
+            color: #f2c1a7;
+            transform: scale(1.1);
+        }
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #f2c1a7;
+            transition: width 0.3s ease;
+        }
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        
+        .carousel {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            position: relative;
+        }
+        .carousel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            pointer-events: none; /* Prevent interaction with the overlay */
+        }
+        .carousel-container {
+            display: flex;
+            transition: transform 1s ease-in-out;
+            position: relative;
+        }
+        .carousel-slide {
+            min-width: 100%;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            background-position: center;
+            background-size: cover;
+        }
+
+        .carousel-slide h4 {
+            font-size: 24px;
+            margin: 10px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            text-decoration: none;
+            color: #f2c1a7;
+            font-weight: bold;
+        }
+        .carousel-slide p {
+            font-size: 16px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+        .carousel-slide a:hover {
+            text-decoration: underline;
+        }
+
+        .buttons {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+        .button {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 50%;
+            margin: 0 2%;
+        }
+        .button:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        /*DOTS*/
+        .dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            margin: 5px;
+            background-color: gray;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .dot.active {
+            background-color: black;
+        }
+
+
+        /*CAMPAÑA ACTUAL*/
+        .card-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .card {
+            width: 70%;
+            border: 2px solid #16c5ff;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        .card-image {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+        }
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .card-content {
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%, -100%);
+            z-index: 2;
+            text-align: center;
+            color: white;
+            padding: 5%;
+        }
+        .card-content h3 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .card-content p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .card-content button {
+            background-color: #16c5ff;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .card-content button:hover {
+            background-color: #0f99d1;
+        }
+
+
+
+        /*BODY*/
+        .bajitos {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 80%;
+            gap: 20px;
+            margin: 20px auto; /* Center horizontally */
+            padding: 20px 20px;
+            background-color: white;
+            border-radius: 10px;
+        }
+
+        .seccion {
+            text-align: center;
+            padding: 10px;
+            background: rgb(233, 254, 254);
+            border-radius: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .seccion:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .seccion img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .seccion h3 {
+            font-size: 20px;
+            color: #f16c20;
+            margin: 10px 0;
+        }
+
+        .seccion p {
+            font-size: 16px;
+            color: #555;
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+
+        .chikilogoSeccion {
+            clip-path: inset(0 50% 0 0);
+            transform: translate(35%, 0%) scale(1.2);
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+            color: rgb(184, 245, 251);
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .seccion a span.text {
+            display: flex;
+            width: 80%;
+            font-size: 20px;
+            margin: 0 auto;
+            justify-content: center;
+            background-color: #16c5ff;
+            color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .seccion a span.text:hover {
+            background-color: #0f99d1;
+            transform: scale(1.1);
+        }
+
+        /*ASOCIACIONES*/
+        .asociaciones {
+            padding: 0 0 50px;
+        }
+
+        .asociaciones h2 {
+            text-align: center; 
+            color: #16c5ff; 
+            margin-top: 40px; 
+            font-size: 28px; 
+            font-weight: bold;
+        }
+
+        .logosAso {
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 30px; 
+            margin: 30px auto; 
+            width: 80%;
+        }
+
+        .logoContainer {
+            text-align: center; 
+            width: 15%; 
+            transition: transform 0.3s ease, 
+            box-shadow 0.3s ease;
+        }
+
+        .logoContainer:hover {
+            transform: scale(1.1);
+        }
+
+
+        /*PIE DE PÁGINA*/
+        .footer-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 20px;
+        }
+        .team-section {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 80%;
+        }
+
+        .team-section h3 {
+            text-align: center;
+            color: #16c5ff;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .team-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .team-section ul li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 5px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .team-section ul li img {
+            width: 24px;
+            height: 24px;
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .team-section ul li img:hover {
+            transform: scale(1.2);
+        }
+
+        .contact-form {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 80%;
+        }
+
+        .contact-form h3 {
+            text-align: center;
+            color: #16c5ff;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .contact-form form {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .contact-form input {
+            width: 90%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .contact-form textarea {
+            width: 90%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 12px;
+
+        }
+
+        .contact-form button {
+            width: 90%;
+            background-color: #16c5ff;
+            color: white;
+            margin: 0 auto;
+            border: none;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .contact-form button:hover {
+            background-color: #0f99d1;
+        }
+        .foot {
+            background: linear-gradient(90deg,  #80f0ff, #16c5ff);
+            color: white;
+            text-align: center;
+            padding: 0 0 25px;
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+            bottom: 0; 
+            left: 0; 
+            width: 100%;
+            z-index: 10; 
+        }
+        .social {
+            display: flex;
+            justify-content: center;
+            flex-direction: row;
+            gap: 1%;
+            margin-top: 10px;
+        }
+        .logoRRSS img {
+            height: 20px;
+            vertical-align: middle;
+        }
+
+
+
+        /* Estilos para dispositivos móviles */
+        @media (max-width: 768px) {
+            header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 2% 2%;
+                background: linear-gradient(90deg, #80f0ff, #16c5ff);
+                color: white;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            nav ul {
+                display: none;
+                flex-direction: column;
+                background: linear-gradient(90deg,  #1dc2d7, #16c5ff);
+                position: absolute;
+                top: 100%;
+                right: 0;
+                width: 200px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                border-radius: 0 0 10px 10px;
+            }
+            nav ul.active {
+                display: flex;
+            }
+
+            nav ul li {
+                margin: 0 auto;
+            }
+            .menu-toggle {
+                display: block;
+                background: none;
+                border: none;
+                color: white;
+                font-size: 24px;
+                cursor: pointer;
+                transition: transform 0.3s ease;
+            }
+            .menu-toggle:hover {
+                transform: rotate(90deg);
+            }
+
+            .carousel-slide {
+                min-width: 100%;
+                height: 150px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                color: white;
+                text-align: center;
+                background-position: center;
+                background-size: cover;
+            }
+
+            .carousel-slide h4 {
+                font-size: 18px;
+            }
+        }
+        /* Estilos para pantallas grandes */
+        @media (min-width: 769px) {
+            .menu-toggle {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div id="logo">
+            <a href="https://www.masvida.eu">
+                <img src="https://www.masvida.eu/wp-content/uploads/2014/06/nuevo-logo-fundacion-masvida.png" alt="Más Vida | Jóvenes con la Vida">
+            </a>
+        </div>
+        <nav>
+            <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+            <ul id="menu">
+                <li><a href="https://www.masvida.eu/">Inicio</a></li>
+                <li><a href="https://www.masvida.eu/conocenos/">Conócenos</a></li>
+                <li><a href="https://www.masvida.eu/ayudanos/">Ayúdanos</a></li>
+                <li><a href="https://www.masvida.eu/noticias/">Noticias</a></li>
+                <li><a href="https://www.masvida.eu/prensa/">Sala de prensa</a></li>
+                <li><a href="https://www.masvida.eu/contacto/">Contáctanos</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="carousel">
+        <div class="carousel-container" id="carousel">
+            <div class="carousel-slide" style="cursor: pointer; background-image: url('https://www.masvida.eu/wp-content/uploads/2020/04/vídeo-abuelos-720x540.png');" onclick="window.location.href='https://www.masvida.eu/gracias-abuelos-sereis-ejemplo-reconstruir-pais-tras-coronavirus';">
+                <h4>Gracias abuelos, seréis nuestro ejemplo para reconstruir el país tras el coronavirus</h4>
+                <p>El Presidente de la Fundación +Vida, Álvaro Ortega, reclama una Ley de Protección de la Tercera Edad...</p>
+            </div>
+            <div class="carousel-slide" style="cursor: pointer; background-image: url('https://www.masvida.eu/wp-content/uploads/2020/04/captura-de-pantalla-2020-04-14-a-las-9.19.38-1170x524.png');" onclick="window.location.href='https://www.masvida.eu/memoria-carlos-falco-juan-cotino-dos-grandes-figuras-la-historia-fundacion-vida/';">
+                <h4>En memoria de Carlos Falcó y Juan Cotino, dos grandes figuras en la historia de Fundación +Vida</a></h4>
+                <p>Recordamos a dos grandes figuras que marcaron la historia de nuestra fundación...</p>
+            </div>
+            <div class="carousel-slide" style="cursor: pointer; background-image: url('https://www.masvida.eu/wp-content/uploads/2019/05/presentacion-campaña-ser-madre-es-la-leche.jpeg');" onclick="window.location.href='https://www.masvida.eu/presentamos-la-campana-madre-la-leche-madres-sin-recursos/';">'>
+                <h4>Presentamos la campaña ¡Ser madre es la leche! para madres sin recursos</h4>
+                <p>Una iniciativa para apoyar a madres en situación de vulnerabilidad...</p>
+            </div>
+            <div class="carousel-slide" style="cursor: pointer; background-image: url('https://www.masvida.eu/wp-content/uploads/2017/07/fiesta-mas-vida-jardin-casa-club-1.jpg');" onclick="window.location.href='https://www.masvida.eu/casi-500-personas-acudieron-la-tercera-fiesta-benefica-la-fundacion-vida/';">
+                <h4>Casi 500 personas acudieron a la tercera fiesta benéfica de la Fundación +Vida</h4>
+                <p>Un evento inolvidable para recaudar fondos y apoyar nuestras causas...</p>
+            </div>
+            <div class="carousel-slide" style="cursor: pointer; background-image: url('https://www.masvida.eu/wp-content/uploads/2017/06/al-principio-no-era-asi.jpg');" onclick="window.location.href='https://www.masvida.eu/fundacion-vida-organiza-la-proyeccion-la-pelicula-documental-al-principio-no-asi-lucia-garijo/';">
+                <h4>Fundación +Vida organiza la proyección de la película–documental “Al principio no era así”</h4>
+                <p>Un documental que refleja los valores y principios de nuestra fundación...</p>
+            </div>
+        </div>
+        <div class="buttons">
+            <button class="button" onclick="prevSlide()">&#10094;</button>
+            <button class="button" onclick="nextSlide()">&#10095;</button>
+        </div>
+    </div>
+    <div class="dots"></div>
+
+    <div class="campannaActual">
+        <div class="card-container">
+            <div class="card" onclick="window.location.href='https://www.masvida.eu/campaigns/serpapasesunregalo/';">
+                <div class="card-image">
+                    <img src="https://www.masvida.eu/wp-content/uploads/2015/11/imagen-de-whatsapp-2024-12-09-a-las-18.57.35_42609cb0.jpg" alt="Nueva Campaña">
+                    <div class="overlay"></div>
+                </div>
+                <div class="card-content">
+                    <h3>Campaña de Navidad</h3>
+                    <p>Descubre nuestra nueva iniciativa para apoyar a quienes más lo necesitan. ¡Únete a nosotros!</p>
+                    <button onclick="window.location.href='https://www.masvida.eu/inscribirse';">Inscribirse</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="bajitos">
+        <div class="seccion">
+            <h3> 
+                <a class="chikilogoSeccion" title="Conócenos" href="http://masvida.eu/conocenos/">
+                    <img loading="lazy" src="http://masvida.eu/wp-content/uploads/2013/12/icono-conocenos1-300x138.png" alt="icono-conocenos" width="300" height="138">
+                </a> Conócenos
+            </h3>
+            <p>Somos una Fundación de jóvenes comprometidos con la defensa de la vida y de la maternidad. ¡Ya somos más de 400 jóvenes!</p>
+        </div>
+
+        <div class="seccion">
+            <h3>
+                <a class="chikilogoSeccion" title="Ayúdanos" href="http://masvida.eu/ayudanos/">
+                    <img loading="lazy" src="http://masvida.eu/wp-content/uploads/2013/12/icono-ayudanos1-300x138.png" alt="icono-ayudanos" width="300" height="138">
+                </a> Ayúdanos
+            </h3>
+            <p>Puedes ayudarnos con un donativo o apuntándote como voluntario! Podrás colaborar en todas nuestras iniciativas.</p>
+        </div>
+
+        <div class="seccion">
+            <h3>
+                <a class="chikilogoSeccion" title="Agenda" href="http://masvida.eu/agenda/">
+                    <img loading="lazy" src="http://masvida.eu/wp-content/uploads/2013/12/icono-agenda2-300x138.png" alt="icono-agenda" width="300" height="138">
+                </a>Agenda de eventos
+            </h3>
+            <p>Realizamos actividades para formar, concienciar y movilizar a los jóvenes sobre el valor de toda vida humana.</p>
+        </div> 
+    </div>   
+    
+    <div class="asociaciones">
+        <h2>Algunas asociaciones colaboradoras</h2>
+        <div class="logosAso">
+            <div class="logoContainer">
+                <a href="https://www.sialavida.es/" target="_blank" style="text-decoration: none;">
+                    <img src="https://sialavida.es/wp-content/uploads/2024/02/logo-Si-a-la-Vida-bocadillo_Mesa-de-trabajo-1-1998x2048.png" alt="Sí a la Vida" style="width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); aspect-ratio: 1/1">
+                    <p style="margin-top: 10px; font-size: 16px; color: #333; font-weight: bold;">Sí a la Vida</p>
+                </a>
+            </div>
+            <div class="logoContainer">
+                <a href="https://www.facebook.com/cadavidaimporta.es/" target="_blank" style="text-decoration: none;">
+                    <img src="https://scontent.fmad17-1.fna.fbcdn.net/v/t39.30808-1/327471379_1289104971669061_8867431658951112694_n.jpg?stp=c150.0.600.600a_dst-jpg_s200x200_tt6&_nc_cat=109&ccb=1-7&_nc_sid=2d3e12&_nc_ohc=rb-fuRRDRQwQ7kNvgHl0JrZ&_nc_oc=AdmN7mmeNH7SgwJE4HeE2euOSwnyWD0Zrclyh_ANTv0iS3jL1qTb1OuLxbrL8Lq9QHw&_nc_zt=24&_nc_ht=scontent.fmad17-1.fna&_nc_gid=QnxHt1KRWQ05seD_Jb-bfw&oh=00_AYEEnTmnm3vGBTyNLeEus0yIOduSJdVLK5LQCK94T5Jk1Q&oe=67EA7D47" alt="Cada Vida Importa" style="width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); aspect-ratio: 1/1">
+                    <p style="margin-top: 10px; font-size: 16px; color: #333; font-weight: bold;">Cada Vida Importa</p>
+                </a>
+            </div>
+            <div class="logoContainer">
+                <a href="https://www.decine21.com/" target="_blank" style="text-decoration: none;">
+                    <img src="https://www.decine21.com/images/logo.png" alt="DeCine21" style="width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); aspect-ratio: 1/1">
+                    <p style="margin-top: 10px; font-size: 16px; color: #333; font-weight: bold;">DeCine21</p>
+                </a>
+            </div>
+            <div class="logoContainer">
+                <a href="https://www.sermadreeslaleche.org/" target="_blank" style="text-decoration: none;">
+                    <img src="https://www.masvida.eu/wp-content/uploads/2015/03/ser-madre-es-la-leche.jpg" alt="Ser Madre Es La Leche" style="width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); aspect-ratio: 1/1">
+                    <p style="margin-top: 10px; font-size: 16px; color: #333; font-weight: bold;">Ser Madre Es La Leche</p>
+                </a>
+            </div>
+            <div class="logoContainer">
+                <a href="https://www.redmadre.es/" target="_blank" style="text-decoration: none;">
+                    <img src="https://www.elconfidencialdigital.com/asset/zoomcrop,1366,800,center,center/media/elconfidencialdigital/images/2019/09/17/2019091717243065347.jpg" alt="RedMadre" style="width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); aspect-ratio: 1/1">
+                    <p style="margin-top: 10px; font-size: 16px; color: #333; font-weight: bold;">RedMadre</p>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    <footer class="foot">
+        <div class="footer-container">
+            <!-- Team Section -->
+            <div class="team-section">
+                <h3>Equipo Directivo</h3>
+                <ul>
+                    <li>
+                        <strong>Presidente:</strong> Álvaro Ortega
+                        <div class="social">
+                            <a href="https://instagram.com/aortega.op" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram"></a>
+                            <a href="https://linkedin.com/in/vocal3" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn"></a>
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Vicepresidente:</strong> María López
+                        <div class="social">
+                            <a href="https://instagram.com/aortega.op" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram"></a>
+                            <a href="https://linkedin.com/in/vocal3" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn"></a>
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Vocal 1:</strong> Juan Pérez
+                        <div class="social">
+                            <a href="https://instagram.com/aortega.op" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram"></a>
+                            <a href="https://linkedin.com/in/vocal3" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn"></a>
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Vocal 2:</strong> Ana García
+                        <div class="social">
+                            <a href="https://instagram.com/aortega.op" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram"></a>
+                            <a href="https://linkedin.com/in/vocal3" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn"></a>
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Vocal 3:</strong> Luis Martínez
+                        <div class="redesEquipo">
+                            <a href="https://instagram.com/aortega.op" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram"></a>
+                            <a href="https://linkedin.com/in/vocal3" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn"></a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="contact-form">
+                <h3>Escríbenos</h3>
+                <form action="#" method="post">
+                    <input type="text" name="name" placeholder="Nombre" required>
+                    <input type="text" name="subject" placeholder="Asunto" required>
+                    <textarea name="message" placeholder="Observaciones" rows="4" required></textarea>
+                    <button type="submit">Enviar</button>
+                </form>
+            </div>
+        </div>
+        <p>Fundación +Vida ©2025</p>
+        <div class="social">
+            <div class="logoRRSS">
+                <a href="http://www.twitter.com/masvidaeu">
+                    <img src="https://cdn-icons-png.flaticon.com/512/5968/5968958.png" alt="Twitter">
+                </a>
+            </div>
+            <div class="logoRRSS">
+                <a href="https://www.facebook.com/masvidaeu" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2504/2504903.png" alt="Facebook">
+                </a>
+            </div>
+            <div class="logoRRSS">
+                <a href="https://www.youtube.com/channel/UCmqMrkbC5UQiiddTvUY5Ccg" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3670/3670209.png" alt="YouTube">
+                </a>
+            </div>
+            <div class="logoRRSS">
+                <a href="http://instagram.com/masvidaeu" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            menu.classList.toggle('active');
+        }
+        let timer = 4000; // Time in milliseconds
+        let index = 0;
+        let autoSlideInterval; // Declare the variable for the interval
+        const slides = document.querySelectorAll('.carousel-slide');
+        const totalSlides = slides.length;
+        const carousel = document.getElementById('carousel');
+        const dotsContainer = document.querySelector('.dots');
+
+        // Crear los dots (puntos de navegación)
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.style.position = 'relative';
+            dot.style.top = '-33px'; // Adjust the value as needed to position the dots higher
+            dot.classList.add('dot');
+            if (i === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => moveToIndex(i));
+            dotsContainer.appendChild(dot);
+        }
+        const dots = document.querySelectorAll('.dot');
+
+
+        function updateCarousel() {
+            const offset = -index * 100;  // Ajuste para que ocupe el 100% del contenedor
+            carousel.style.transform = `translateX(${offset}%)`;
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[index].classList.add('active');
+        }
+
+        function nextSlide() {
+            index = (index + 1) % totalSlides;
+            updateCarousel();
+        }
+
+        function prevSlide() {
+            index = (index - 1 + totalSlides) % totalSlides;
+            updateCarousel();
+        }
+
+        function moveToIndex(i) {
+            index = i;
+            updateCarousel();
+            clearInterval(autoSlideInterval);
+            autoSlideInterval = setInterval(nextSlide, timer);
+        }
+        autoSlideInterval = setInterval(nextSlide, timer);  // Assign the interval to the variable
+    </script>
+</body>
+</html>
